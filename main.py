@@ -2,7 +2,6 @@ import argparse
 import json
 import logging
 import os
-import subprocess
 import sys
 from typing import Dict, List
 
@@ -87,23 +86,26 @@ class ConfigHardener:
             A list of validation errors.
         """
         try:
-            jsonschema.validate(instance=self.config_data, schema=self.policy_schema)
-            return []  # No errors
-        except jsonschema.ValidationError as e:
-            return [str(e)]
+            # iter_errors, not validate: validate stops at the first
+            # failure, so a config breaking two rules only ever heard
+            # about one of them and the second stayed unfixed.
+            validator_cls = jsonschema.validators.validator_for(self.policy_schema)
+            validator = validator_cls(self.policy_schema)
+            return [str(e) for e in validator.iter_errors(self.config_data)]
         except Exception as e:
             logging.error(f"Error during validation: {e}")
             return [str(e)]
 
-    def remediate_config(self) -> None:
+    def remediate_config(self) -> List[str]:
         """
-        Remediates non-compliant settings based on the policy. This is a placeholder.
-        In a real-world scenario, this would contain logic to modify the
-        configuration file based on the validation errors and the remediation
-        strategies defined in the policy. For example, it might update specific
-        values, add missing keys, or remove insecure settings.
+        Reports non-compliant settings based on the policy.
 
-        This simplified version just prints remediation suggestions.
+        This tool deliberately stops at suggestions: it never rewrites
+        the configuration file. A schema can say a value is wrong, but
+        not what the right value is for a given host, so applying a
+        guessed fix automatically could break the service the file
+        belongs to. Returns the validation errors so the caller can
+        fail the run when the config is not compliant.
         """
         errors = self.validate_config()
         if errors:
@@ -112,34 +114,20 @@ class ConfigHardener:
             )
             for error in errors:
                 logging.warning(f"  - {error}")
-                # In a real implementation, apply changes here based on the error
-                # and the policy's remediation instructions.
-                # Example:
-                #   if "required property 'secure_setting'" in error:
-                #       self.config_data["secure_setting"] = True
-                #   ...
         else:
             logging.info("Configuration is compliant with the policy.")
 
         if self.dry_run:
-            logging.info("Dry run: No changes will be applied.")
-            logging.info("Remediation suggestions (if any) are for informational purposes.")
-        else:
-            if errors: # only write if there were errors
-                logging.info("Applying changes (simulated in this example).")
-                # In a real implementation, write the modified configuration back to file
-                # with open(self.config_file, "w") as f:
-                #    yaml.dump(self.config_data, f)  # or json.dump(self.config_data, f)
-            else:
-                logging.info("No changes needed.")
+            logging.info("Dry run: suggestions only, as in every run of this tool.")
+        return errors
 
-    def run(self) -> None:
+    def run(self) -> List[str]:
         """
-        Runs the hardening process.
+        Runs the hardening process. Returns the validation errors.
         """
         self.load_config()
         self.load_policy()
-        self.remediate_config()
+        return self.remediate_config()
 
 
 def setup_argparse() -> argparse.ArgumentParser:
@@ -193,7 +181,10 @@ def main() -> None:
         sys.exit(1)
 
     hardener = ConfigHardener(args.config_file, args.policy_file, args.dry_run)
-    hardener.run()
+    # A non-compliant config is a failed check, not a successful run with
+    # warnings. Scripts calling this tool need the exit code to say so.
+    if hardener.run():
+        sys.exit(1)
 
 
 if __name__ == "__main__":
@@ -221,10 +212,3 @@ if __name__ == "__main__":
 #
 # 4. Run in dry-run mode:
 # python your_script_name.py -c config.yaml -p policy.json -n
-
-# Example of offensive tools integration (simulated):
-# In a real-world scenario, after hardening, you could run tools like:
-# - Lynis: To perform a security audit and verify the hardening.
-# - CIS Benchmarks: To assess compliance with CIS security standards.
-# These tools would be executed using `subprocess`, and their output
-# would be parsed to identify any remaining vulnerabilities.
