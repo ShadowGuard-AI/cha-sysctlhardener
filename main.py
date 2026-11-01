@@ -93,6 +93,11 @@ class ConfigHardener:
             validator = validator_cls(self.policy_schema)
             return [str(e) for e in validator.iter_errors(self.config_data)]
         except Exception as e:
+            # The policy itself is never checked as a schema anywhere,
+            # so a malformed policy surfaces here as one error string
+            # in the same list shape as a config violation. The caller
+            # cannot tell policy is broken from config is broken; both
+            # exit 1 with an errors list.
             logging.error(f"Error during validation: {e}")
             return [str(e)]
 
@@ -180,6 +185,9 @@ def main() -> None:
         logging.error(f"Policy file does not exist: {args.policy_file}")
         sys.exit(1)
 
+    # Despite the name, nothing in this tool is specific to sysctl:
+    # the config can be any YAML or JSON mapping and the policy any
+    # JSON schema. The name describes the job it was first pointed at.
     hardener = ConfigHardener(args.config_file, args.policy_file, args.dry_run)
     # A non-compliant config is a failed check, not a successful run with
     # warnings. Scripts calling this tool need the exit code to say so.
