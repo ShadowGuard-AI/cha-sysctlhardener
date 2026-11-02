@@ -3,161 +3,86 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cha Sysctlhardener: what it is, how it runs, where it stops</title>
-<meta name="description" content="Cha Sysctlhardener is one of my projects. The README in the repo is short, so this page sticks to what the files themselves show.">
+<title>cha-sysctlhardener: Organ Grinder's Monkey in Retirement</title>
+<meta name="description" content="Validates a YAML or JSON configuration file against a hardening policy written as a JSON schema.">
 <style>
-:root {
-  --bg: #1e2014; --panel: #2c2e1e; --ink: #eeecdc;
-  --mut: #3b3e28;
-  --acc: #ceb25c; --acc2: #b2603e;
-  --line: #2c2e1e;
-}
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--bg); color: var(--ink);
-  font-family: Verdana, Geneva, sans-serif; line-height: 1.55; }
-code, pre, .mono { font-family: 'Lucida Console', monospace; }
-a { color: var(--acc2); }
-.hero { padding: 3rem 6vw 1rem; }
-.hero img.banner { width: 100%; height: auto; border: 1px solid var(--line);
-  border-radius: 10px; }
-.logo { width: 92px; height: 92px; border-radius: 18px;
-  border: 1px solid var(--line); }
-h1 { font-size: 2.4rem; margin: 0.4em 0 0.1em; }
-h2 { border-bottom: 2px solid var(--acc); padding-bottom: 0.2em;
-  margin-top: 2em; }
-.lede { font-size: 1.15rem; max-width: 62ch; }
-main { padding: 0 6vw 3rem; max-width: 1180px; margin: 0 auto; }
-.grid { display: grid; gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); }
-.card { background: var(--panel); border: 1px solid var(--line);
-  border-radius: 12px; padding: 1rem 1.2rem; }
-.card.pop { animation: rise 0.7s ease both; }
-@keyframes rise { from { opacity: 0; transform: translateY(14px); }
-  to { opacity: 1; transform: none; } }
-pre.code { background: #101014; color: #e8e6df; padding: 1rem 1.2rem;
-  border-radius: 12px; overflow-x: auto; font-size: 0.86rem;
-  border-left: 5px solid var(--acc); }
-table { border-collapse: collapse; width: 100%; }
-td, th { border-bottom: 1px solid var(--line); padding: 0.45rem 0.6rem;
-  text-align: left; }
-.shots { display: grid; gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
-.shots img { width: 100%; height: auto; border: 1px solid var(--line);
-  border-radius: 10px; background: #f4f1e8; }
-footer { padding: 2rem 6vw; border-top: 1px solid var(--line);
-  color: var(--mut); }
-.rail { display: flex; gap: 1.2rem; align-items: flex-start; }
-.rail nav { position: sticky; top: 1rem; min-width: 180px; }
-@media (max-width: 760px) { .rail { flex-direction: column; }
-  .rail nav { position: static; } }
-@media (prefers-reduced-motion: reduce) {
-  .card.pop { animation: none; } * { scroll-behavior: auto; } }
+@font-face{font-family:'Baloo Chettan 2';src:url('fonts/BalooChettan2.ttf') format('truetype');}
+@font-face{font-family:'Bitter';src:url('fonts/Bitter.ttf') format('truetype');}
+:root{--paper:#f3eee2;--leaf:#faf6ea;--navy:#16204a;--black:#17140f;--brass:#c49634}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--black);font-family:'Bitter',serif;line-height:1.65}
+h1,h2,h3{font-family:'Baloo Chettan 2',sans-serif;color:var(--navy)}
+.hero img.heroimg{width:100%;height:56vh;object-fit:cover;display:block}
+.hero .in{padding:1rem 6vw 2rem;max-width:1120px;margin:0 auto;width:100%}
+.hero h1{font-size:2rem;margin:.4rem 0}.logo{width:210px}
+main{padding:0 6vw 3rem;max-width:1120px;margin:0 auto}
+nav{display:flex;gap:.9rem;flex-wrap:wrap;margin:1.2rem 0}
+.btn{display:inline-block;text-decoration:none;color:#fff;font-family:'Baloo Chettan 2',sans-serif;padding:.65rem 1.4rem;background:#4a3421;border:2px solid var(--navy);border-radius:50% 50% 10px 10px/70% 70% 10px 10px;overflow:hidden;position:relative}
+.btn:hover{filter:brightness(1.25)}.btn:active{transform:translateY(2px)}.btn:focus-visible{outline:3px solid var(--brass);outline-offset:3px}
+.panel{background:var(--leaf);padding:.4rem 1.8rem 1.5rem;margin:1.8rem 0;position:relative;background-image:repeating-linear-gradient(90deg,transparent 0 118px,rgba(22,32,74,.07) 118px 119px)}
+.panel::before{content:'●';position:absolute;top:10px;left:14px;color:var(--brass)}
+.panel::after{content:'';position:absolute;top:10px;right:12px;width:30px;height:20px;background:#3d3d48;opacity:.75}
+.panel h2{font-size:1.55rem;margin-left:1.2rem}
+pre{background:#efe8d2;padding:1rem;overflow-x:auto}.cmd{font-size:1.25rem;text-align:center;font-weight:700}
+a{color:#5a3a10}a::before{content:'▭ ';color:#8a8578}
+a:hover::before{color:var(--navy)}.btn::before{content:none}
+.divider{height:16px;margin:2rem 0;background:repeating-linear-gradient(90deg,#e3d193 0 44px,#fff 44px 48px);border-top:2px dashed #8a7a4a;border-bottom:2px dashed #8a7a4a}
+table{border-collapse:collapse;width:100%}td,th{padding:.5rem .7rem;border-bottom:1px solid #ddd3b8;text-align:left;vertical-align:top}
+td b{font-family:'Baloo Chettan 2',sans-serif;color:var(--navy)}
+.callout{background:#e9e6de;border-top:6px solid #55524c;padding:.2rem 1.4rem 1.1rem;margin:1.3rem 0}
+.callout h3{font-size:1.3rem}
+footer{padding:1rem 6vw 2.4rem;max-width:1120px;margin:0 auto}
 </style>
 </head>
-<body class="layout-cards">
-<!-- This page exists for cha-sysctlhardener alone: the layout (index-cards),
-     the colors, and the type were picked for this project, not
-     shared with the other project pages. The code block below is
-     copied from the file it names, line for line. If it looks
-     plain, that is because the project is plain, and I would
-     rather the page match the project than dress it up. The one
-     thing I will not do here is oversell: what this project does
-     not do is stated on the page, not hidden from it. -->
+<body>
 <header class="hero">
-  <img class="logo" src="assets/logo.png" alt="Cha Sysctlhardener logo">
-  <img class="banner" src="assets/banner.png" alt="">
-  <h1>Cha Sysctlhardener</h1>
-  <p class="mono"><a href="https://github.com/ShadowGuard-AI/cha-sysctlhardener">github.com/ShadowGuard-AI/cha-sysctlhardener</a></p>
+<img class="heroimg" src="assets/intro-banner.png" alt="A quiet table after the last performance: a retired monkey cap on a folded programme, a ticket roll, carbon copies under a stamp pad, and a saucer of brass buttons, with no lettering anywhere">
+<div class="in">
+<img class="logo" src="assets/logo.png" alt="A small navy monkey cap with a pale peak edge and one brass button at the side">
+<h1>cha-sysctlhardener</h1>
+<p>A day book kept in ruled columns. The work is over, the objects remain, and each one is accounted for on the page.</p>
+<nav>
+<a class="btn" href="#usage">Validate the Configuration</a>
+<a class="btn" href="#params">Check Against the Policy</a>
+<a class="btn" href="#params">Run the Dry Run Flag</a>
+<a class="btn" href="#params">Show Help</a>
+</nav>
+</div>
 </header>
-
 <main>
-  <section class="rail">
-    <nav aria-label="on this page">
-      <p class="mono"><a href="#run">Run it</a><br>
-      <a href="#files">The files</a><br>
-      <a href="#sheets">The sheets</a><br>
-      <a href="https://github.com/ShadowGuard-AI/cha-sysctlhardener">The repo</a></p>
-    </nav>
-    <div>
-      <p class="lede">Cha Sysctlhardener is one of my projects. The README in the repo is short, so this page sticks to what the files themselves show.</p>
-      <div class="grid">
-        <div class="card pop"><h3>What it is</h3>
-          <p>Cha Sysctlhardener: 3 files, 251 counted
-          lines across Python 230, Markdown 17, Text 4. One job, done in the
-          open, in files you can read.</p></div>
-        <div class="card pop"><h3>The biggest piece</h3>
-          <p><code>main.py</code> carries the most
-          lines. If the project grows, that file is where the growth
-          lands first, for better or worse.</p></div>
-        <div class="card pop"><h3>The honest gap</h3>
-          <p>No test files yet. That is the honest gap, and the roadmap in the visuals folder says what the first one should cover.</p></div>
-      </div>
-      <section id="run">
-        <h2>Run it</h2>
-        <p>The repo README has the exact commands for this one. The
-        shape is the shape for most of my projects: clone it, read the
-        top file first so you know what will happen, then run it on
-        something you do not mind breaking.</p>
-        <p class="mono">$ git clone https://github.com/ShadowGuard-AI/cha-sysctlhardener.git<br>$ cd cha-sysctlhardener</p>
-      </section>
-      
-  <section aria-label="real code">
-    <h2>The code, as it sits in the repo</h2>
-    <p>From <code>main.py</code>, line 16 on. I did
-    not tidy it for the page. What you see is what the file has.</p>
-    <pre class="code"><code>
-
-class ConfigHardener:
-    &quot;&quot;&quot;
-    A class for hardening configuration files based on JSON schema policies.
-    &quot;&quot;&quot;
-
-    def __init__(self, config_file: str, policy_file: str, dry_run: bool = False):
-        &quot;&quot;&quot;
-        Initializes the ConfigHardener.
-
-        Args:
-            config_file: Path to the configuration file to harden.
-            policy_file: Path to the JSON schema policy file.
-            dry_run: If True, only show changes without applying them.
-        &quot;&quot;&quot;
-        self.config_file = config_file
-        self.policy_file = policy_file
-        self.dry_run = dry_run
-        self.config_data = None
-        self.policy_schema = None</code></pre>
-  </section>
-      <section id="files">
-        <h2>The files that matter</h2>
-        <table><tr><th>File</th><th>Lines</th></tr>
-        <tr><td><code>main.py</code></td><td>230</td></tr>
-        <tr><td><code>README.md</code></td><td>17</td></tr>
-        <tr><td><code>requirements.txt</code></td><td>4</td></tr>
-        </table>
-        <p>Names doing the work: <span class="mono">ConfigHardener, setup_argparse, main, __init__, load_config, load_policy, validate_config, remediate_config</span>.</p>
-      </section>
-      <section id="sheets">
-        <h2>Drawn by hand</h2>
-        <p>I sketch my projects on notebook paper so I have to
-        understand them well enough to draw them. The full set,
-        with the counts and how they were counted, is the
-        <a href="https://github.com/ShadowGuard-AI/cha-sysctlhardener/tree/main/cha-sysctlhardener-Visuals">cha-sysctlhardener-Visuals</a>
-        folder in the repo. Nothing is drawn over the binder holes.
-        That is a rule, not a style.</p>
-        <div class="shots">
-          <img src="assets/architecture.png" alt="Hand drawn architecture sheet for Cha Sysctlhardener">
-          <img src="assets/flowchart.png" alt="Hand drawn flowchart sheet for Cha Sysctlhardener">
-          <img src="assets/product-map.png" alt="Hand drawn product map sheet for Cha Sysctlhardener">
-        </div>
-      </section>
-    </div>
-  </section>
+<section class="panel"><h2>Report Only, Never Rewritten</h2>
+<p>cha-sysctlhardener validates a YAML or JSON configuration file against a hardening policy written as a JSON schema, and reports every setting that does not comply, with the schema failure for each one.</p>
+<p>It does not rewrite the configuration file. The report is the output, and a non compliant configuration exits with status 1 so scripts can gate on it.</p>
+<p><a href="https://github.com/ShadowGuard-AI/cha-sysctlhardener">The repository on GitHub</a></p>
+</section>
+<div class="divider"></div>
+<section class="panel"><h2>Install</h2>
+<pre>git clone https://github.com/ShadowGuard-AI/cha-sysctlhardener</pre>
+<div class="callout"><h3>Install Stops at the Clone</h3><p>Gap, not instruction: the source install stops at the clone. It gives no change of directory step and no requirements install, even though a requirements.txt sits in the repository naming jsonschema and PyYAML.</p></div>
+</section>
+<div class="divider"></div>
+<section class="panel" id="usage"><h2>Two Required Files</h2>
+<pre class="cmd">python3 main.py -c CONFIG_FILE -p POLICY_FILE [-n]</pre>
+<p>Both file arguments are required, and the bracketed flag is the only optional part.</p>
+</section>
+<div class="divider"></div>
+<section class="panel" id="params"><h2>The Dry Run Changes Nothing</h2>
+<table>
+<tr><td><b>-h</b></td><td>Shows the help message and exits.</td></tr>
+<tr><td><b>-c, --config</b></td><td>Path to the configuration file, YAML or JSON, required.</td></tr>
+<tr><td><b>-p, --policy</b></td><td>Path to the JSON schema policy file, required.</td></tr>
+<tr><td><b>-n, --dry-run</b></td><td>Asks for a dry run, showing changes without applying them. Every run of this tool is report only, so this flag does not change the output or the exit code, and a non compliant configuration still exits 1 with this flag.</td></tr>
+</table>
+</section>
+<div class="divider"></div>
+<section class="panel"><h2>Exits That Were Verified</h2>
+<p>A compliant configuration exits 0.</p>
+<p>A non compliant configuration exits 1 and reports the schema failure for each setting.</p>
+<p>A missing configuration file exits 1.</p>
+<div class="callout"><h3>Non Compliant Means Exit 1</h3><p>Read from main.py, not from the source document: the validator gathers every failure instead of stopping at the first, nothing in the code is specific to sysctl despite the name, and a malformed policy can surface in the same error list as a fault in the configuration.</p></div>
+</section>
+<div class="divider"></div>
+<section class="panel"><h2>See LICENSE</h2><pre>See LICENSE.</pre><p>Reproduced as the source leaves it. The page does not upgrade that line into a named licence in its own wording.</p></section>
 </main>
-<footer>
-  <p>Cha Sysctlhardener is one of my projects. This page was written
-  from the repo itself on 2026-10-30: the counts are the
-  repo's counts, the code is the repo's code, and the gaps are the
-  repo's gaps.</p>
-</footer>
+<footer><p>Theme: Organ Grinder's Monkey in Retirement. Type: Baloo Chettan 2 for headings, Bitter for reading, both SIL Open Font License 1.1. No reference font was assigned to this project and none is embedded.</p></footer>
 </body>
 </html>
