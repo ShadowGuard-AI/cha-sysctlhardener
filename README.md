@@ -1,6 +1,12 @@
+![The red tagged gauge close up beside its cream certificate on the bench, its face plain and blank, the wire seal on its adjusting screw unbroken and the deadweight tester soft behind](intro-banner.png)
+
 > Day book entry treatment noted first: a ruled day book page, Baloo Chettan 2 in uniform navy on paper.
 
 # cha-sysctlhardener
+
+![One round brass pressure gauge straight on with a plain blank face carrying a single needle and no markings of any kind, a plain red tag with no markings tied at its rim, the heading plate](logo.png)
+
+![A steel calibration bench with a row of brass pressure gauges with plain blank faces beside a deadweight tester, a technician at the end of the bench writing on a cream certificate, one gauge tagged with a plain red tag and its adjusting screw sealed with wire](banner.png)
 
 ![A tabletop in three depths: the wall still, the day book turning one page at a long interval, and lamplight shifting from one brass button to its neighbour](scene.svg)
 
