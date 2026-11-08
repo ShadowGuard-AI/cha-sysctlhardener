@@ -3,86 +3,87 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>cha-sysctlhardener: Organ Grinder's Monkey in Retirement</title>
-<meta name="description" content="Validates a YAML or JSON configuration file against a hardening policy written as a JSON schema.">
+<title>cha-sysctlhardener: The Calibration Bench</title>
 <style>
-@font-face{font-family:'Baloo Chettan 2';src:url('fonts/BalooChettan2.ttf') format('truetype');}
-@font-face{font-family:'Bitter';src:url('fonts/Bitter.ttf') format('truetype');}
-:root{--paper:#f3eee2;--leaf:#faf6ea;--navy:#16204a;--black:#17140f;--brass:#c49634}
-*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--black);font-family:'Bitter',serif;line-height:1.65}
-h1,h2,h3{font-family:'Baloo Chettan 2',sans-serif;color:var(--navy)}
-.hero img.heroimg{width:100%;height:56vh;object-fit:cover;display:block}
-.hero .in{padding:1rem 6vw 2rem;max-width:1120px;margin:0 auto;width:100%}
-.hero h1{font-size:2rem;margin:.4rem 0}.logo{width:210px}
-main{padding:0 6vw 3rem;max-width:1120px;margin:0 auto}
-nav{display:flex;gap:.9rem;flex-wrap:wrap;margin:1.2rem 0}
-.btn{display:inline-block;text-decoration:none;color:#fff;font-family:'Baloo Chettan 2',sans-serif;padding:.65rem 1.4rem;background:#4a3421;border:2px solid var(--navy);border-radius:50% 50% 10px 10px/70% 70% 10px 10px;overflow:hidden;position:relative}
-.btn:hover{filter:brightness(1.25)}.btn:active{transform:translateY(2px)}.btn:focus-visible{outline:3px solid var(--brass);outline-offset:3px}
-.panel{background:var(--leaf);padding:.4rem 1.8rem 1.5rem;margin:1.8rem 0;position:relative;background-image:repeating-linear-gradient(90deg,transparent 0 118px,rgba(22,32,74,.07) 118px 119px)}
-.panel::before{content:'●';position:absolute;top:10px;left:14px;color:var(--brass)}
-.panel::after{content:'';position:absolute;top:10px;right:12px;width:30px;height:20px;background:#3d3d48;opacity:.75}
-.panel h2{font-size:1.55rem;margin-left:1.2rem}
-pre{background:#efe8d2;padding:1rem;overflow-x:auto}.cmd{font-size:1.25rem;text-align:center;font-weight:700}
-a{color:#5a3a10}a::before{content:'▭ ';color:#8a8578}
-a:hover::before{color:var(--navy)}.btn::before{content:none}
-.divider{height:16px;margin:2rem 0;background:repeating-linear-gradient(90deg,#e3d193 0 44px,#fff 44px 48px);border-top:2px dashed #8a7a4a;border-bottom:2px dashed #8a7a4a}
-table{border-collapse:collapse;width:100%}td,th{padding:.5rem .7rem;border-bottom:1px solid #ddd3b8;text-align:left;vertical-align:top}
-td b{font-family:'Baloo Chettan 2',sans-serif;color:var(--navy)}
-.callout{background:#e9e6de;border-top:6px solid #55524c;padding:.2rem 1.4rem 1.1rem;margin:1.3rem 0}
-.callout h3{font-size:1.3rem}
-footer{padding:1rem 6vw 2.4rem;max-width:1120px;margin:0 auto}
+@font-face { font-family: "Electrolize"; src: url("fonts/Electrolize-400.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Roboto"; src: url("fonts/Roboto-400.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Roboto"; src: url("fonts/Roboto-700.woff2") format("woff2"); font-weight: 700; }
+:root {
+  --steel: #eceff1; --bench: #dfe3e6; --ink: #2c3134; --soft: #68737a;
+  --brass: #8f6b1f; --cream: #faf6ea; --red: #c22f2f; --line: #c3ccd1; --card: #ffffff;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--steel); color: var(--ink); font-family: "Roboto", sans-serif; line-height: 1.55; }
+.wrap { max-width: 900px; margin: 0 auto; padding: 0 20px 64px; }
+header.hero { text-align: center; padding: 56px 0 8px; }
+.cert { border: 2px solid var(--brass); outline: 1px solid var(--brass); outline-offset: 5px; background: var(--cream); padding: 34px 26px 28px; }
+h1, h2 { font-family: "Electrolize", sans-serif; line-height: 1.2; letter-spacing: .01em; }
+h1 { font-size: clamp(26px, 4.6vw, 40px); margin: 0 0 10px; }
+.tagline { color: var(--soft); font-size: 18px; margin: 0 auto; max-width: 640px; }
+.btns { margin: 24px 0 6px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+a.btn { font-family: "Electrolize", sans-serif; text-decoration: none; padding: 11px 22px; border-radius: 4px; border: 2px solid var(--brass); color: var(--brass); background: transparent; }
+a.btn.solid { background: var(--brass); border-color: var(--brass); color: #fff; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; margin: 34px 0; }
+.fact { background: var(--card); border: 1px solid var(--line); border-top: 5px solid var(--brass); border-radius: 4px; padding: 14px 16px; }
+.fact b { display: block; font-family: "Electrolize", sans-serif; font-size: 14px; letter-spacing: .05em; text-transform: uppercase; color: var(--brass); margin-bottom: 4px; }
+section { margin: 38px 0; }
+h2 { font-size: 25px; margin: 0 0 12px; border-bottom: 2px solid var(--line); padding-bottom: 7px; }
+code, pre { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+pre { background: #26303a; color: #e8eef2; padding: 15px 18px; border-radius: 6px; overflow-x: auto; font-size: 14.5px; }
+table { border-collapse: collapse; width: 100%; background: var(--card); }
+th, td { border: 1px solid var(--line); padding: 9px 12px; text-align: left; vertical-align: top; }
+th { font-family: "Electrolize", sans-serif; background: var(--bench); }
+.hold { background: #fdf1ef; border: 1px solid #e8c4bf; border-left: 6px solid var(--red); border-radius: 6px; padding: 16px 20px; }
+.hold h2 { border: none; padding: 0; }
+.hold ul { margin: 8px 0 4px; padding-left: 20px; }
+footer { margin-top: 52px; border-top: 2px solid var(--line); padding-top: 16px; color: var(--soft); font-size: 14.5px; text-align: center; }
 </style>
 </head>
 <body>
+<div class="wrap">
 <header class="hero">
-<img class="heroimg" src="assets/intro-banner.png" alt="A quiet table after the last performance: a retired monkey cap on a folded programme, a ticket roll, carbon copies under a stamp pad, and a saucer of brass buttons, with no lettering anywhere">
-<div class="in">
-<img class="logo" src="assets/logo.png" alt="A small navy monkey cap with a pale peak edge and one brass button at the side">
-<h1>cha-sysctlhardener</h1>
-<p>A day book kept in ruled columns. The work is over, the objects remain, and each one is accounted for on the page.</p>
-<nav>
-<a class="btn" href="#usage">Validate the Configuration</a>
-<a class="btn" href="#params">Check Against the Policy</a>
-<a class="btn" href="#params">Run the Dry Run Flag</a>
-<a class="btn" href="#params">Show Help</a>
-</nav>
-</div>
+  <div class="cert">
+    <h1>cha-sysctlhardener</h1>
+    <p class="tagline">The Calibration Bench. A command line validator that reads a YAML or JSON configuration against a hardening policy written as a JSON schema and reports every setting that does not comply. Gauges are read against the standard, certificates are written, and the adjusting screws stay sealed: the report is the entire output.</p>
+    <div class="btns">
+      <a class="btn solid" href="https://github.com/ShadowGuard-AI/cha-sysctlhardener">The repository</a>
+      <a class="btn" href="https://github.com/ShadowGuard-AI/cha-sysctlhardener/blob/main/main.py">main.py</a>
+    </div>
+  </div>
 </header>
-<main>
-<section class="panel"><h2>Report Only, Never Rewritten</h2>
-<p>cha-sysctlhardener validates a YAML or JSON configuration file against a hardening policy written as a JSON schema, and reports every setting that does not comply, with the schema failure for each one.</p>
-<p>It does not rewrite the configuration file. The report is the output, and a non compliant configuration exits with status 1 so scripts can gate on it.</p>
-<p><a href="https://github.com/ShadowGuard-AI/cha-sysctlhardener">The repository on GitHub</a></p>
+
+<div class="facts">
+  <div class="fact"><b>Input</b>A configuration file and a policy file, both required</div>
+  <div class="fact"><b>Output</b>Every schema failure found, reported rather than stopping at the first</div>
+  <div class="fact"><b>Dry run</b>The -n flag changes neither the output nor the exit code, because every run is report only</div>
+  <div class="fact"><b>Exits</b>Compliant 0, non compliant 1, missing file 1</div>
+</div>
+
+<section>
+  <h2>Usage</h2>
+  <pre>python3 main.py -c CONFIG_FILE -p POLICY_FILE [-n]</pre>
+  <table>
+    <tr><th>Option</th><th>What it does</th></tr>
+    <tr><td><code>-c</code>, <code>--config</code></td><td>Path to the configuration file, YAML or JSON. Required.</td></tr>
+    <tr><td><code>-p</code>, <code>--policy</code></td><td>Path to the JSON schema policy file. Required.</td></tr>
+    <tr><td><code>-n</code>, <code>--dry-run</code></td><td>Described in the README as a dry run. Every run of this tool is report only, so the flag does not change the output or the exit code: a non compliant configuration still exits 1 with it.</td></tr>
+    <tr><td><code>-h</code></td><td>Show help message and exit.</td></tr>
+  </table>
 </section>
-<div class="divider"></div>
-<section class="panel"><h2>Install</h2>
-<pre>git clone https://github.com/ShadowGuard-AI/cha-sysctlhardener</pre>
-<div class="callout"><h3>Install Stops at the Clone</h3><p>Gap, not instruction: the source install stops at the clone. It gives no change of directory step and no requirements install, even though a requirements.txt sits in the repository naming jsonschema and PyYAML.</p></div>
+
+<section class="hold">
+  <h2>Stated limits</h2>
+  <ul>
+    <li>The name describes the job the tool was first pointed at, not the tool. The repository description claims it applies secure sysctl settings based on a target operating system profile; the code contains nothing sysctl specific, no operating system profile anywhere, and no application of anything. The configuration can be any YAML or JSON mapping and the policy any JSON schema.</li>
+    <li>Nothing is hardened in the sense of being changed: the tool never rewrites the configuration file. A non compliant configuration exits 1 so scripts can gate on the report.</li>
+    <li>Every failure is reported: validation collects the failures across the whole configuration rather than stopping at the first one.</li>
+    <li>The policy itself is never checked as a schema anywhere, so a malformed policy surfaces as one error string in the same list shape as a configuration violation, and the caller cannot tell policy is broken from configuration is broken. Both exit 1 with an errors list.</li>
+  </ul>
 </section>
-<div class="divider"></div>
-<section class="panel" id="usage"><h2>Two Required Files</h2>
-<pre class="cmd">python3 main.py -c CONFIG_FILE -p POLICY_FILE [-n]</pre>
-<p>Both file arguments are required, and the bracketed flag is the only optional part.</p>
-</section>
-<div class="divider"></div>
-<section class="panel" id="params"><h2>The Dry Run Changes Nothing</h2>
-<table>
-<tr><td><b>-h</b></td><td>Shows the help message and exits.</td></tr>
-<tr><td><b>-c, --config</b></td><td>Path to the configuration file, YAML or JSON, required.</td></tr>
-<tr><td><b>-p, --policy</b></td><td>Path to the JSON schema policy file, required.</td></tr>
-<tr><td><b>-n, --dry-run</b></td><td>Asks for a dry run, showing changes without applying them. Every run of this tool is report only, so this flag does not change the output or the exit code, and a non compliant configuration still exits 1 with this flag.</td></tr>
-</table>
-</section>
-<div class="divider"></div>
-<section class="panel"><h2>Exits That Were Verified</h2>
-<p>A compliant configuration exits 0.</p>
-<p>A non compliant configuration exits 1 and reports the schema failure for each setting.</p>
-<p>A missing configuration file exits 1.</p>
-<div class="callout"><h3>Non Compliant Means Exit 1</h3><p>Read from main.py, not from the source document: the validator gathers every failure instead of stopping at the first, nothing in the code is specific to sysctl despite the name, and a malformed policy can surface in the same error list as a fault in the configuration.</p></div>
-</section>
-<div class="divider"></div>
-<section class="panel"><h2>See LICENSE</h2><pre>See LICENSE.</pre><p>Reproduced as the source leaves it. The page does not upgrade that line into a named licence in its own wording.</p></section>
-</main>
-<footer><p>Theme: Organ Grinder's Monkey in Retirement. Type: Baloo Chettan 2 for headings, Bitter for reading, both SIL Open Font License 1.1. No reference font was assigned to this project and none is embedded.</p></footer>
+
+<footer>
+  <p>The README of cha-sysctlhardener closes with the line "See LICENSE."; the repository carries a separate LICENSE file headed MIT License. Site type is set in Electrolize and Roboto, self-hosted under the SIL Open Font License.</p>
+</footer>
+</div>
 </body>
 </html>
