@@ -1,12 +1,6 @@
-![A quiet table after the last performance: a retired monkey cap on a folded programme, a ticket roll, carbon copies under a stamp pad, and a saucer of brass buttons, with no lettering anywhere](intro-banner.png)
-
 > Day book entry treatment noted first: a ruled day book page, Baloo Chettan 2 in uniform navy on paper.
 
 # cha-sysctlhardener
-
-![A small navy monkey cap with a pale peak edge and one brass button at the side](logo.png)
-
-![A table at the end of a day with the day book open at the front carrying the title as an entry](banner.png)
 
 ![A tabletop in three depths: the wall still, the day book turning one page at a long interval, and lamplight shifting from one brass button to its neighbour](scene.svg)
 
