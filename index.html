@@ -17,6 +17,10 @@ body { margin: 0; background: var(--steel); color: var(--ink); font-family: "Rob
 .wrap { max-width: 900px; margin: 0 auto; padding: 0 20px 64px; }
 header.hero { text-align: center; padding: 56px 0 8px; }
 .cert { border: 2px solid var(--brass); outline: 1px solid var(--brass); outline-offset: 5px; background: var(--cream); padding: 34px 26px 28px; }
+img.hero-logo { width: min(400px, 82vw); border-radius: 6px; box-shadow: 0 10px 34px rgba(44,49,52,.25); margin-bottom: 20px; }
+figure { margin: 30px 0; }
+figure img { width: 100%; border-radius: 6px; display: block; box-shadow: 0 8px 28px rgba(44,49,52,.18); }
+figcaption { color: var(--soft); font-size: 15px; text-align: center; margin-top: 9px; }
 h1, h2 { font-family: "Electrolize", sans-serif; line-height: 1.2; letter-spacing: .01em; }
 h1 { font-size: clamp(26px, 4.6vw, 40px); margin: 0 0 10px; }
 .tagline { color: var(--soft); font-size: 18px; margin: 0 auto; max-width: 640px; }
@@ -43,6 +47,7 @@ footer { margin-top: 52px; border-top: 2px solid var(--line); padding-top: 16px;
 <div class="wrap">
 <header class="hero">
   <div class="cert">
+    <img class="hero-logo" src="assets/logo.png" alt="One round brass pressure gauge straight on with a plain blank face carrying a single needle and no markings of any kind, a plain red tag with no markings tied at its rim">
     <h1>cha-sysctlhardener</h1>
     <p class="tagline">The Calibration Bench. A command line validator that reads a YAML or JSON configuration against a hardening policy written as a JSON schema and reports every setting that does not comply. Gauges are read against the standard, certificates are written, and the adjusting screws stay sealed: the report is the entire output.</p>
     <div class="btns">
@@ -51,6 +56,11 @@ footer { margin-top: 52px; border-top: 2px solid var(--line); padding-top: 16px;
     </div>
   </div>
 </header>
+
+<figure>
+  <img src="assets/intro-banner.png" alt="The red tagged gauge close up beside its cream certificate on the bench, its face plain and blank, the wire seal on its adjusting screw unbroken and the deadweight tester soft behind">
+  <figcaption>The tagged gauge, read up close; its seal is unbroken.</figcaption>
+</figure>
 
 <div class="facts">
   <div class="fact"><b>Input</b>A configuration file and a policy file, both required</div>
@@ -70,6 +80,11 @@ footer { margin-top: 52px; border-top: 2px solid var(--line); padding-top: 16px;
     <tr><td><code>-h</code></td><td>Show help message and exit.</td></tr>
   </table>
 </section>
+
+<figure>
+  <img src="assets/banner.png" alt="A steel calibration bench with a row of brass pressure gauges with plain blank faces beside a deadweight tester, a technician at the end of the bench writing on a cream certificate, one gauge tagged with a plain red tag and its adjusting screw sealed with wire">
+  <figcaption>A row of gauges read in turn; nothing on the bench is adjusted.</figcaption>
+</figure>
 
 <section class="hold">
   <h2>Stated limits</h2>
