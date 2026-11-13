@@ -11,7 +11,6 @@
 ![A tabletop in three depths: the wall still, the day book turning one page at a long interval, and lamplight shifting from one brass button to its neighbour](scene.svg)
 
 
-# cha-SysctlHardener
 Validates a YAML or JSON configuration file against a hardening policy written as a JSON schema, and reports every setting that does not comply, with the schema failure for each one. It does not rewrite the configuration file: the report is the output, and a non-compliant configuration exits with status 1 so scripts can gate on it.
 
 ## Install
@@ -50,4 +49,4 @@ Validates a YAML or JSON configuration file against a hardening policy written a
 ![A minor divider: a centred short length of measuring tape](sep-light.svg)
 
 ## License
-See LICENSE.
+See [LICENSE](LICENSE).
